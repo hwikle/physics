@@ -1,11 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-G = 9.8
+G = 9.8 # approx. Earth gravity, meters per second squared
+T_STEP = 0.01
 
 class PhysicsFrame(object):
     def __init__(self):
-        self.time = 0
+        self.time = 0 # current time in seconds   
+        self.timestep = 1
         self.children = []
 
     def add_child(self, child):
@@ -22,14 +24,14 @@ class PhysicsFrame(object):
         for child in self.children:
             child.update_position()
 
-        self.time += 1
+        self.time += self.timestep
 
     def display_children(self):
         for child in self.children:
             child.display(self.time)
         
 
-class PhysicsObject(object):
+class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
 
@@ -65,8 +67,9 @@ class PointMass(PhysicsObject):
 
 if __name__ == '__main__':
         simFrame = PhysicsFrame()
+        simFrame.timestep = T_STEP
         m = PointMass(1)
-        m.add_force(lambda t:np.array([0, -G]))
+        m.add_force(lambda t:np.array([0, -G*T_STEP]))
         simFrame.add_child(m)
 
         simFrame.display_children()
