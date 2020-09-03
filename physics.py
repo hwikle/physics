@@ -18,11 +18,11 @@ class PhysicsFrame(object):
         for child in self.children:
             # must update all velocities before updating positions, since new velocities may depend on positions
             child.apply_forces(self.time)
-            child.update_velocity()
+            child.update_velocity(self.timestep)
             child.reset_acceleration()
 
         for child in self.children:
-            child.update_position()
+            child.update_position(self.timestep)
 
         self.time += self.timestep
 
@@ -53,11 +53,11 @@ class PointMass(PhysicsObject):
             for f in self.forces:
                 self.acceleration += f(t)/self.mass
 
-        def update_velocity(self):
-            self.velocity += self.acceleration
+        def update_velocity(self, delta_t):
+            self.velocity += self.acceleration * delta_t
         
-        def update_position(self):
-            self.position += self.velocity
+        def update_position(self, delta_t):
+            self.position += self.velocity * delta_t
 
         def reset_acceleration(self):
             self.acceleration = np.zeros(2)
@@ -69,7 +69,7 @@ if __name__ == '__main__':
         simFrame = PhysicsFrame()
         simFrame.timestep = T_STEP
         m = PointMass(1)
-        m.add_force(lambda t:np.array([0, -G*T_STEP]))
+        m.add_force(lambda t:np.array([0, -G*m.mass]))
         simFrame.add_child(m)
 
         simFrame.display_children()
