@@ -3,12 +3,22 @@ import matplotlib.pyplot as plt
 
 G = 9.8 # approx. Earth gravity, meters per second squared
 T_STEP = 0.01
+DEFAULT_SIZE = (2, 2)
 
 class PhysicsFrame(object):
     def __init__(self):
         self.time = 0 # current time in seconds   
         self.timestep = 1
         self.children = []
+        self.size = DEFAULT_SIZE
+        self.axis = None
+
+        self._setup_plot()
+
+    def _setup_plot(self):
+        self.axis = plt.gca()
+        self.axis.set_xlim([-self.size[0]/2, self.size[0]/2])
+        self.axis.set_ylim([-self.size[1], 0])
 
     def add_child(self, child):
         assert(isinstance(child, PhysicsObject))
@@ -27,6 +37,8 @@ class PhysicsFrame(object):
         self.time += self.timestep
 
     def display_children(self):
+        plt.clf()
+        self._setup_plot()
         for child in self.children:
             child.display(self.time)
         
@@ -35,7 +47,24 @@ class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
 
-class PointMass(PhysicsObject):
+class Point(PhysicsObject):
+    def __init__(self, dimension, position):
+        if not isinstance(position, np.ndarray):
+            raise TypeError('Position must be ndarray')
+        if position.shape[-1] != dimension:
+            raise ValueError('Length of position vector does not match number of dimensions')
+        self.dimension = dimension
+        self.position = position
+ 
+class Point2D(Point):
+    def __init__(self, position):
+        super().__init(self, 2, position)
+
+class Point3D(Point):
+    def __init__(self, position):
+        super().__init__(3, position)
+
+class PointMass2D(PhysicsObject):
         def __init__(self, mass):
             super().__init__()
 
@@ -63,7 +92,7 @@ class PointMass(PhysicsObject):
             self.acceleration = np.zeros(2)
 
         def display(self, t):
-            plt.plot(t, self.position[1], 'o')
+            plt.plot(self.position[0], self.position[1], 'o')
 
 if __name__ == '__main__':
         simFrame = PhysicsFrame()
