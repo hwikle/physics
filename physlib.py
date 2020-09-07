@@ -1,24 +1,15 @@
 import numpy as np
-import matplotlib.pyplot as plt
+from time import sleep
 
 G = 9.8 # approx. Earth gravity, meters per second squared
 T_STEP = 0.01
-DEFAULT_SIZE = (2, 2)
 
 class PhysicsFrame(object):
     def __init__(self):
         self.time = 0 # current time in seconds   
         self.timestep = 1
         self.children = []
-        self.size = DEFAULT_SIZE
-        self.axis = None
-
-        self._setup_plot()
-
-    def _setup_plot(self):
-        self.axis = plt.gca()
-        self.axis.set_xlim([-self.size[0]/2, self.size[0]/2])
-        self.axis.set_ylim([-self.size[1], 0])
+        self.view = None
 
     def add_child(self, child):
         assert(isinstance(child, PhysicsObject))
@@ -36,6 +27,17 @@ class PhysicsFrame(object):
 
         self.time += self.timestep
 
+    def attach(self, view):
+        self.view = view
+        self.view.simFrame = self
+
+    def start(self, t):
+        while self.time < t:
+            if self.view:
+                self.view.render()
+                sleep(self.timestep)
+            self.step()
+
 class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
@@ -48,6 +50,8 @@ class Point(PhysicsObject):
             raise ValueError('Length of position vector does not match number of dimensions')
         self.dimension = dimension
         self.position = position
+        self.velocity = np.zeros(dimension)
+        self.acceleration = np.zeros(dimension)
  
 class Point2D(Point):
     def __init__(self, position):
@@ -62,10 +66,6 @@ class PointMass2D(PhysicsObject):
             super().__init__()
 
             self.mass = mass
-            self.position = np.zeros(2)
-            self.velocity = np.zeros(2)
-            self.acceleration = np.zeros(2)
-
             self.forces = []
 
         def add_force(self, forceFunc):
@@ -73,7 +73,7 @@ class PointMass2D(PhysicsObject):
 
         def apply_forces(self, t):
             for f in self.forces:
-                self.acceleration += f(t)/self.mass
+                self.acceleration += f.evaluate(t)/self.mass
 
         def update_velocity(self, delta_t):
             self.velocity += self.acceleration * delta_t
@@ -83,6 +83,19 @@ class PointMass2D(PhysicsObject):
 
         def reset_acceleration(self):
             self.acceleration = np.zeros(2)
+
+class Force(PhysicsObject):
+    def __init__(self):
+        self.dimension = None
+        self.is_constant = False
+        self.vector = None
+        self.function = None
+
+    def evaluate(self, t):
+        if self.is_constant:
+            return self.vector
+        else:
+            return self.function(t)
 
 if __name__ == '__main__':
     pass
