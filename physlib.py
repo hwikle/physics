@@ -36,13 +36,6 @@ class PhysicsFrame(object):
 
         self.time += self.timestep
 
-    def display_children(self):
-        plt.clf()
-        self._setup_plot()
-        for child in self.children:
-            child.display(self.time)
-        
-
 class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
@@ -91,20 +84,5 @@ class PointMass2D(PhysicsObject):
         def reset_acceleration(self):
             self.acceleration = np.zeros(2)
 
-        def display(self, t):
-            plt.plot(self.position[0], self.position[1], 'o')
-
 if __name__ == '__main__':
-        simFrame = PhysicsFrame()
-        simFrame.timestep = T_STEP
-        m = PointMass(1)
-        m.add_force(lambda t:np.array([0, -G*m.mass]))
-        simFrame.add_child(m)
-
-        simFrame.display_children()
-
-        for i in range(10):
-            simFrame.step()
-            simFrame.display_children()
-
-        plt.show()
+    pass
