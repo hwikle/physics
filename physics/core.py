@@ -42,7 +42,7 @@ class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
 
-class Point(PhysicsObject):
+class Particle(PhysicsObject):
     def __init__(self, dimension, position):
         if not isinstance(position, np.ndarray):
             raise TypeError('Position must be ndarray')
@@ -53,11 +53,11 @@ class Point(PhysicsObject):
         self.velocity = np.zeros(dimension)
         self.acceleration = np.zeros(dimension)
  
-class Point2D(Point):
+class Particle2D(Particle):
     def __init__(self, position):
         super().__init(self, 2, position)
 
-class Point3D(Point):
+class Particle3D(Particle):
     def __init__(self, position):
         super().__init__(3, position)
 
@@ -83,6 +83,15 @@ class PointMass2D(PhysicsObject):
 
         def reset_acceleration(self):
             self.acceleration = np.zeros(2)
+
+class MassiveObject(Particle):
+    pass
+
+class CordLength(MassiveObject):
+    pass
+
+class Cord(PhysicsObject):
+    pass
 
 class Force(PhysicsObject):
     def __init__(self):
