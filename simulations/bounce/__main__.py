@@ -1,5 +1,8 @@
-from physlib import *
-from SimView import *
+import sys
+sys.path.append("~/Documents/programming/python/physics/physics")
+
+from physics.core import *
+from physics.SimView import *
 #from matplotlib.animation import FuncAnimation
 #import matplotlib.pyplot as plt
 
@@ -7,15 +10,15 @@ from SimView import *
 simFrame = PhysicsFrame()
 simFrame.timestep = 1/50
 
-# create force object for gravity
+# create ball in simulation frame
+ball = PointMass2D(1)
+simFrame.add_child(ball)
+
+# create force object for gravity, and add to ball
 gravity = Force()
 gravity.is_constant = True
 gravity.vector = np.array([0, -G*ball.mass])
-
-# create ball in simulation frame, with gravity
-ball = PointMass2D(1)
 ball.add_force(gravity)
-simFrame.add_child(ball)
 
 # attach view to simulation frame
 view = SimView()
