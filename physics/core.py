@@ -27,17 +27,6 @@ class PhysicsFrame(object):
 
         self.time += self.timestep
 
-    def attach(self, view):
-        self.view = view
-        self.view.simFrame = self
-
-    def start(self, t):
-        while self.time < t:
-            if self.view:
-                self.view.render()
-                sleep(self.timestep)
-            self.step()
-
 class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
