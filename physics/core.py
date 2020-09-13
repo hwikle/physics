@@ -32,25 +32,21 @@ class PhysicsObject(object): # For future-proofing
         pass
 
 class Particle(PhysicsObject):
-    def __init__(self, dimension, position):
-        if not isinstance(position, np.ndarray):
-            raise TypeError('Position must be ndarray')
-        if position.shape[-1] != dimension:
-            raise ValueError('Length of position vector does not match number of dimensions')
+    def __init__(self, dimension):
         self.dimension = dimension
-        self.position = position
+        self.position = np.zeros(dimension)
         self.velocity = np.zeros(dimension)
         self.acceleration = np.zeros(dimension)
  
 class Particle2D(Particle):
-    def __init__(self, position):
-        super().__init(self, 2, position)
+    def __init__(self):
+        super().__init__(2)
 
 class Particle3D(Particle):
     def __init__(self, position):
         super().__init__(3, position)
 
-class PointMass2D(PhysicsObject):
+class PointMass2D(Particle2D):
         def __init__(self, mass):
             super().__init__()
 
