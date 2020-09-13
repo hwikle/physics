@@ -2,7 +2,6 @@ import numpy as np
 from time import sleep
 
 G = 9.8 # approx. Earth gravity, meters per second squared
-T_STEP = 0.01
 
 class PhysicsFrame(object):
     def __init__(self):
@@ -44,13 +43,13 @@ class Particle2D(Particle):
 
 class Particle3D(Particle):
     def __init__(self, position):
-        super().__init__(3, position)
+        super().__init__(3)
 
 class PointMass2D(Particle2D):
         def __init__(self, mass):
             super().__init__()
 
-            self.mass = mass
+            self.mass = mass # move property to Particle?
             self.forces = []
 
         def add_force(self, forceFunc):
