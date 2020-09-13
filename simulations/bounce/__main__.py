@@ -3,8 +3,6 @@ sys.path.append("~/Documents/programming/python/physics/physics")
 
 from physics.core import *
 from physics.SimView import *
-#from matplotlib.animation import FuncAnimation
-#import matplotlib.pyplot as plt
 
 # create and configure simulation frame
 simFrame = PhysicsFrame()
@@ -22,9 +20,9 @@ ball.add_force(gravity)
 
 # attach view to simulation frame
 view = SimView()
-simFrame.attach(view) # implement
+view.simFrame = simFrame # implement
 
-simFrame.start()
+view.start()
 
 #def animFunc(frame):
 #    simFrame.step()
