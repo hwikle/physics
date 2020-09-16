@@ -1,3 +1,4 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
@@ -11,24 +12,24 @@ POINT_SIZE = 20
 class SimView(object):
     def __init__(self):
         self.simFrame = None
-        self.fig = plt.gcf()
+        self.fig = plt.figure()
         self.xlims = [-VIEW_WIDTH/2, VIEW_WIDTH/2]
         self.ylims = [-VIEW_HEIGHT, 0]
 
-        self.axes = plt.gca()
+        self.ax = self.fig.add_subplot(1, 2, 1)
 
     def nextFrame(self, frame):
 
-        # TODO: implement user-defined nextFrame function
+        # TODO: impl.artistement user-defined nextFrame function
 
         self.simFrame.step()
 
         plt.cla()
-        self.axes.set_xlim(self.xlims)
-        self.axes.set_ylim(self.ylims)
+        self.ax.set_xlim(self.xlims)
+        self.ax.set_ylim(self.ylims)
 
         for c in self.simFrame.children:
-            plt.plot(c.position[0], c.position[1], MARKER, markersize=POINT_SIZE)
+            self.ax.plot(c.position[0], c.position[1], MARKER, markersize=POINT_SIZE)
 
     def start(self):
         
