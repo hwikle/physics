@@ -26,6 +26,14 @@ class PhysicsFrame(object):
 
         self.time += self.timestep
 
+    def calc_energy(self):
+        energy = 0
+
+        for c in self.children:
+            energy += c.calc_energy()
+
+        return energy
+
 class PhysicsObject(object): # For future-proofing
     def __init__(self):
         pass
@@ -67,6 +75,9 @@ class PointMass2D(Particle2D):
 
         def reset_acceleration(self):
             self.acceleration = np.zeros(2)
+
+        def calc_energy(self):
+            return 0.5 * self.mass * self.velocity.dot(self.velocity)
 
 class MassiveObject(Particle):
     pass
