@@ -16,7 +16,8 @@ class SimView(object):
         self.xlims = [-VIEW_WIDTH/2, VIEW_WIDTH/2]
         self.ylims = [-VIEW_HEIGHT, 0]
 
-        self.ax = self.fig.add_subplot(1, 2, 1)
+        self.ax1 = self.fig.add_subplot(1, 2, 1)
+        self.ax2 = self.fig.add_subplot(1, 2, 2)
 
     def nextFrame(self, frame):
 
@@ -24,12 +25,13 @@ class SimView(object):
 
         self.simFrame.step()
 
-        plt.cla()
-        self.ax.set_xlim(self.xlims)
-        self.ax.set_ylim(self.ylims)
+        self.ax1.clear()
+        self.ax1.set_xlim(self.xlims)
+        self.ax1.set_ylim(self.ylims)
 
         for c in self.simFrame.children:
-            self.ax.plot(c.position[0], c.position[1], MARKER, markersize=POINT_SIZE)
+            self.ax1.plot(c.position[0], c.position[1], MARKER, markersize=POINT_SIZE)
+            self.ax2.plot(self.simFrame.time, self.simFrame.calc_energy(), 'bo')
 
     def start(self):
         
