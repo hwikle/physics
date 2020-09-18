@@ -12,13 +12,15 @@ class SimWindow(object):
         self.simFrame = None
 
     def add_view(self, view):
-        view.axis = self.fig.add_subplot(self.rows, self.cols, len(self.views))
+        view.axis = self.fig.add_subplot(self.rows, self.cols, len(self.views) + 1)
         self.views.append(view)
 
         if not self.simFrame:
             self.simFrame = view.simFrame
 
     def next_frame(self, frame):
+        self.simFrame.step()
+
         for v in self.views:
             v.next_frame()
 
